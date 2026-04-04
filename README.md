@@ -297,3 +297,384 @@ Pada praktikum ini, seluruh operasi CRUD berhasil diimplementasikan:
 <img width="1604" height="1150" alt="Screenshot 2026-04-04 213511" src="https://github.com/user-attachments/assets/796303ae-42a7-4455-9213-9dc64870db52" />
 <img width="1603" height="1148" alt="Screenshot 2026-04-04 213528" src="https://github.com/user-attachments/assets/e8152905-c8c2-4f68-8e0d-7fa10daddb9d" />
 <img width="1601" height="1149" alt="Screenshot 2026-04-04 213548" src="https://github.com/user-attachments/assets/964dd06d-e5b5-4bf8-9099-9c91960ec569" />
+
+# Lab7Web (3)
+## 1. Membuat Layout Utama
+
+Membuat template utama agar semua halaman memiliki struktur yang sama.
+
+Lokasi:
+
+```
+app/Views/layout/main.php
+```
+
+### Fungsi yang digunakan:
+
+* `<?= $this->renderSection('content') ?>`
+  Digunakan untuk menampilkan isi konten dari halaman yang menggunakan layout
+
+* `base_url()`
+  Untuk membuat URL dinamis (CSS, link menu, dll)
+
+---
+
+## 2. Menggunakan Layout di View
+
+Contoh implementasi pada file view (misalnya `home.php`):
+
+```php
+<?= $this->extend('layout/main') ?>
+
+<?= $this->section('content') ?>
+
+<h1><?= $title; ?></h1>
+<p><?= $content; ?></p>
+
+<?= $this->endSection() ?>
+```
+
+### Penjelasan:
+
+* `$this->extend('layout/main')`
+  Menghubungkan view dengan layout utama
+
+* `$this->section('content')`
+  Mendefinisikan bagian yang akan dimasukkan ke layout
+
+* `$this->endSection()`
+  Menutup section
+
+---
+
+## 3. View Cell (Komponen Modular)
+
+View Cell digunakan untuk membuat komponen yang bisa dipanggil berulang, seperti:
+
+* Sidebar
+* Widget
+* Menu
+* Artikel terbaru
+
+---
+
+## 4. Membuat View Cell
+
+Lokasi:
+
+```
+app/Cells/ArtikelTerkini.php
+```
+
+### Contoh kode:
+
+```php
+class ArtikelTerkini extends Cell
+{
+    public function render()
+    {
+        $model = new ArtikelModel();
+        $artikel = $model->orderBy('created_at', 'DESC')
+                         ->limit(5)
+                         ->findAll();
+
+        return view('components/artikel_terkini', ['artikel' => $artikel]);
+    }
+}
+```
+
+### Penjelasan:
+
+* `Cell`
+  Class bawaan CodeIgniter untuk membuat View Cell
+
+* `orderBy('created_at', 'DESC')`
+  Mengurutkan artikel terbaru
+
+* `limit(5)`
+  Membatasi jumlah data
+
+* `view()`
+  Mengembalikan tampilan komponen
+
+---
+
+## 5. Membuat View untuk Cell
+
+Lokasi:
+
+```
+app/Views/components/artikel_terkini.php
+```
+
+### Contoh:
+
+```php
+<h3>Artikel Terkini</h3>
+<ul>
+    <?php foreach ($artikel as $row): ?>
+        <li>
+            <a href="<?= base_url('/artikel/' . $row['slug']) ?>">
+                <?= $row['judul'] ?>
+            </a>
+        </li>
+    <?php endforeach; ?>
+</ul>
+```
+
+---
+
+## 6. Memanggil View Cell di Layout
+
+Di dalam `main.php`:
+
+```php
+<?= view_cell('App\\Cells\\ArtikelTerkini::render') ?>
+```
+
+### Penjelasan:
+
+* `view_cell()`
+  Untuk memanggil class View Cell dan menampilkan hasilnya
+
+---
+
+### ✅ Perbedaan View vs View Cell:
+
+| View Biasa                    | View Cell                      |
+| ----------------------------- | ------------------------------ |
+| Digunakan untuk halaman utama | Digunakan untuk komponen kecil |
+| Dipanggil dari controller     | Dipanggil langsung di view     |
+| Tidak modular                 | Modular & reusable             |
+
+<img width="1593" height="1148" alt="Screenshot 2026-04-04 222419" src="https://github.com/user-attachments/assets/a17002b3-5b53-464e-ac8d-c72186470e9b" />
+
+# Lab7Web (4)
+## 1. Membuat Tabel User
+
+Digunakan untuk menyimpan data login user.
+
+```sql
+CREATE TABLE user (
+  id INT(11) auto_increment,
+  username VARCHAR(200) NOT NULL,
+  useremail VARCHAR(200),
+  userpassword VARCHAR(200),
+  PRIMARY KEY(id)
+);
+```
+
+---
+
+## 2. Membuat Model User
+
+`app/Models/UserModel.php`
+
+```php
+class UserModel extends Model
+{
+    protected $table = 'user';
+    protected $primaryKey = 'id';
+    protected $useAutoIncrement = true;
+    protected $allowedFields = ['username', 'useremail', 'userpassword'];
+}
+```
+
+### Fungsi:
+
+* Menghubungkan aplikasi dengan tabel `user`
+* Mengelola data user (ambil, insert, dll)
+
+---
+
+## 3. Membuat Controller User
+
+`app/Controllers/User.php`
+
+### Method `index()`
+
+```php
+$model = new UserModel();
+$users = $model->findAll();
+```
+
+Menampilkan semua data user
+
+---
+
+### Method `login()`
+
+```php
+$email = $this->request->getPost('email');
+$password = $this->request->getPost('password');
+```
+
+Mengambil input dari form
+
+```php
+$login = $model->where('useremail', $email)->first();
+```
+
+Mencari user berdasarkan email
+
+```php
+password_verify($password, $pass)
+```
+
+Mencocokkan password dengan hash di database
+
+---
+
+### Session Login
+
+```php
+$session->set([
+    'user_id' => $login['id'],
+    'user_name' => $login['username'],
+    'user_email' => $login['useremail'],
+    'logged_in' => TRUE,
+]);
+```
+
+Menyimpan status login user
+
+---
+
+### Flash Message (Error)
+
+```php
+$session->setFlashdata("flash_msg", "Password salah.");
+```
+
+Menampilkan pesan error sementara
+
+---
+
+## 4. Membuat View Login
+
+`app/Views/user/login.php`
+
+### Fungsi yang digunakan:
+
+* `session()->getFlashdata()`
+  Menampilkan pesan error
+
+* `set_value('email')`
+  Menyimpan input sebelumnya jika gagal login
+
+---
+
+## 5. Database Seeder
+
+Seeder digunakan untuk membuat data dummy user.
+
+### Membuat Seeder:
+
+```bash
+php spark make:seeder UserSeeder
+```
+
+### Isi Seeder:
+
+```php
+$model->insert([
+    'username' => 'admin',
+    'useremail' => 'admin@email.com',
+    'userpassword' => password_hash('admin123', PASSWORD_DEFAULT),
+]);
+```
+
+### Jalankan Seeder:
+
+```bash
+php spark db:seed UserSeeder
+```
+
+---
+
+## 6. Auth Filter
+
+`app/Filters/Auth.php`
+
+```php
+if (!session()->get('logged_in')) {
+    return redirect()->to('/user/login');
+}
+```
+
+Mengecek apakah user sudah login atau belum
+
+---
+
+## 7. Konfigurasi Filter
+
+`app/Config/Filters.php`
+
+```php
+'auth' => \App\Filters\Auth::class,
+```
+
+Mendaftarkan filter ke sistem
+
+---
+
+## 8. Routing
+
+`app/Config/Routes.php`
+
+```php
+$routes->match(['get','post'], '/user/login', 'User::login');
+$routes->get('/user/logout', 'User::logout');
+
+$routes->group('admin', ['filter' => 'auth'], function($routes) {
+    $routes->get('artikel', 'Artikel::index');
+});
+```
+
+Semua route `admin` akan dilindungi login
+
+---
+
+## 9. Logout
+
+```php
+session()->destroy();
+```
+
+Menghapus session (logout user)
+
+---
+
+## 10. Testing Login
+
+Akses:
+
+```
+http://localhost:8080/user/login
+```
+
+Gunakan:
+
+```
+Email    : admin@email.com
+Password : admin123
+```
+
+---
+
+## Kesimpulan
+
+### Login System
+
+* Menggunakan email & password
+* Password disimpan dalam bentuk hash
+
+### Session
+
+* Digunakan untuk menyimpan status login
+
+### Filter
+
+* Mengamankan halaman tertentu (admin)
+
+<img width="1919" height="1150" alt="Screenshot 2026-04-04 234503" src="https://github.com/user-attachments/assets/787a36dd-eb57-42ee-b88e-547b632278d9" />
