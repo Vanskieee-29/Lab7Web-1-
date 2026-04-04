@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\ArtikelModel;
+
 class Page extends BaseController
 {
     public function about()
@@ -38,9 +40,10 @@ class Page extends BaseController
 
     public function home()
     {
-        return view('home', [
-            'title' => 'Halaman Home',
-            'content' => 'Selamat datang di website Praktikum Web 2.'
-        ]);
+        $title = 'Home';
+        $model = new ArtikelModel();
+        $artikel = $model->findAll();
+
+        return view('home', compact('artikel', 'title'));
     }
 }

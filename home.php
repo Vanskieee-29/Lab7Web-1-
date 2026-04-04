@@ -1,9 +1,20 @@
-<?= $this->include('template/header'); ?>
+<?= $this->extend('layout/main') ?>
 
-<div class="card">
-    <h1><?= $title; ?></h1>
-    <hr>
-    <p><?= $content; ?></p>
-</div>
+<?= $this->section('content') ?>
 
-<?= $this->include('template/footer'); ?>
+<h1><?= $title ?? 'Home'; ?></h1>
+
+<?php if (!empty($artikel)): ?>
+    <?php foreach ($artikel as $row): ?>
+        <article>
+            <h2><?= $row['judul']; ?></h2>
+            <p><?= substr($row['isi'], 0, 200); ?>...</p>
+            <a href="<?= site_url('/artikel/' . $row['slug']); ?>">Baca selengkapnya</a>
+            <hr>
+        </article>
+    <?php endforeach; ?>
+<?php else: ?>
+    <p>Belum ada artikel.</p>
+<?php endif; ?>
+
+<?= $this->endSection() ?>

@@ -1,0 +1,294 @@
+/* =========================
+   RESET DASAR
+========================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    line-height: 1.6;
+}
+
+
+/* =========================
+   CONTAINER (BIAR TENGAH)
+========================= */
+#container,
+.container {
+    width: 900px;
+    margin: 30px auto;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+
+/* =========================
+   HEADER
+========================= */
+header {
+    padding: 20px;
+}
+
+header h1 {
+    color: #333;
+}
+
+
+/* =========================
+   NAVBAR
+========================= */
+nav {
+    background: #2c73b8;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}
+
+nav a {
+    color: white;
+    padding: 10px 15px;
+    margin-right: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 3px;
+}
+
+/* hover */
+nav a:hover {
+    background: #1e5a96;
+}
+
+/* active */
+nav a.active {
+    background: #1e5a96;
+}
+
+/* logout di kanan */
+nav a.logout {
+    margin-left: auto;
+    background: #e74c3c;
+}
+
+nav a.logout:hover {
+    background: #c0392b;
+}
+
+
+/* =========================
+   WRAPPER (2 KOLOM)
+========================= */
+#wrapper {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+/* MAIN */
+#main {
+    flex: 3;
+}
+
+/* SIDEBAR */
+#sidebar {
+    flex: 1;
+}
+
+
+/* =========================
+   SIDEBAR WIDGET
+========================= */
+.widget-box {
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.widget-box .title {
+    background: #2c73b8;
+    color: #fff;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.widget-box ul {
+    list-style: none;
+    padding: 10px;
+}
+
+.widget-box ul li {
+    margin-bottom: 8px;
+}
+
+.widget-box ul li a {
+    text-decoration: none;
+    color: #333;
+}
+
+.widget-box p {
+    padding: 10px;
+    font-size: 14px;
+    color: #555;
+}
+
+
+/* =========================
+   ARTIKEL
+========================= */
+#main article {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+#main h2 {
+    margin-bottom: 5px;
+}
+
+#main a {
+    color: #2c73b8;
+    text-decoration: none;
+}
+
+#main a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================
+   TABLE ADMIN
+========================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table thead {
+    background: #5b8cc0;
+    color: white;
+}
+
+table th,
+table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+table tbody tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+.btn {
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-edit {
+    background: #777;
+}
+
+.btn-delete {
+    background: #e74c3c;
+}
+
+
+/* =========================
+   FORM
+========================= */
+input[type=text],
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+button {
+    background: #2c73b8;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1e5a96;
+}
+
+
+/* =========================
+   LOGIN PAGE
+========================= */
+.login-wrapper {
+    height: 100vh;
+    background: linear-gradient(135deg, #2c73b8, #1e5a96);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    display: flex;
+    width: 700px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.login-left {
+    flex: 1;
+    background: #2c73b8;
+    color: white;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login-right {
+    flex: 1;
+    background: white;
+    padding: 40px;
+}
+
+.login-right input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.login-right button {
+    width: 100%;
+    padding: 12px;
+    background: #2c73b8;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.login-right button:hover {
+    background: #1e5a96;
+}
+
+.error {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
