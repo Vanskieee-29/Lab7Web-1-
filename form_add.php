@@ -2,7 +2,8 @@
 
 <h2>Tambah Artikel</h2>
 
-<form method="post">
+<!-- 🔥 WAJIB: enctype -->
+<form method="post" enctype="multipart/form-data">
 
     <label>Judul</label>
     <input type="text" name="judul">
@@ -20,6 +21,10 @@
             </option>
         <?php endforeach; ?>
     </select>
+
+    <!-- 🔥 TAMBAHAN UPLOAD GAMBAR -->
+    <label>Gambar</label>
+    <input type="file" name="gambar">
 
     <button type="submit">Kirim</button>
 </form>

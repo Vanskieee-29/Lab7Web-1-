@@ -46,7 +46,7 @@ class Artikel extends BaseController
 
         $builder = $model->table('artikel')
             ->select('artikel.*, kategori.nama_kategori')
-            ->join('kategori', 'kategori.id_kategori = artikel.id_kategori');
+            ->join('kategori', 'kategori.id_kategori = artikel.id_kategori', 'left');
 
         if ($q != '') {
             $builder->like('artikel.judul', $q);
@@ -77,29 +77,42 @@ class Artikel extends BaseController
         $validation = \Config\Services::validation();
         $validation->setRules([
             'judul' => 'required',
-            'id_kategori' => 'required|integer'
+            'id_kategori' => 'required'
         ]);
 
         $isDataValid = $validation->withRequest($this->request)->run();
 
         if ($isDataValid)
         {
+            // 🔥 AMBIL FILE
+            $file = $this->request->getFile('gambar');
+
+            // 🔥 PATH LANGSUNG (TANPA MKDIR)
+            $path = FCPATH . 'gambar/';
+
+            if ($file && $file->isValid() && !$file->hasMoved()) {
+                $file->move($path);
+                $namaGambar = $file->getName();
+            } else {
+                $namaGambar = null;
+            }
+
+            // 🔥 INSERT DATA
             $model->insert([
                 'judul' => $this->request->getPost('judul'),
                 'isi' => $this->request->getPost('isi'),
                 'slug' => url_title($this->request->getPost('judul')),
-                'id_kategori' => $this->request->getPost('id_kategori'), // 🔥 penting
+                'id_kategori' => $this->request->getPost('id_kategori'),
+                'gambar' => $namaGambar,
             ]);
 
             return redirect()->to(base_url('admin/artikel'));
         }
 
-        $data = [
+        return view('artikel/form_add', [
             'title' => 'Tambah Artikel',
-            'kategori' => $kategoriModel->findAll(), // 🔥 ini biar dropdown muncul
-        ];
-
-        return view('artikel/form_add', $data);
+            'kategori' => $kategoriModel->findAll()
+        ]);
     }
 
     public function edit($id)
