@@ -678,3 +678,102 @@ Password : admin123
 * Mengamankan halaman tertentu (admin)
 
 <img width="1919" height="1150" alt="Screenshot 2026-04-04 234503" src="https://github.com/user-attachments/assets/787a36dd-eb57-42ee-b88e-547b632278d9" />
+
+# Penambahan Fitur Pagination & Pencarian (Search)
+
+Pada tahap ini, sistem admin artikel telah dikembangkan dengan menambahkan fitur **pagination (halaman)** dan **pencarian data** untuk mempermudah pengelolaan artikel.
+
+---
+
+## Pagination (Pembagian Halaman)
+
+Pagination digunakan untuk membatasi jumlah data yang ditampilkan dalam satu halaman.
+
+### Implementasi:
+
+* Menggunakan method `paginate()` dari CodeIgniter Model
+* Menampilkan maksimal **5 artikel per halaman**
+* Menggunakan `$pager` untuk navigasi halaman
+
+### Kode (Controller):
+
+```php
+public function admin_index()
+{
+    $model = new ArtikelModel();
+
+    $data = [
+        'artikel' => $model->paginate(5),
+        'pager'   => $model->pager,
+    ];
+
+    return view('artikel/admin_index', $data);
+}
+```
+
+### Menampilkan pagination di View:
+
+```php
+<?= $pager->links(); ?>
+```
+
+---
+
+## Pencarian Artikel (Search)
+
+Fitur pencarian digunakan untuk mencari artikel berdasarkan judul.
+
+### Implementasi:
+
+* Menggunakan method `like()` pada model
+* Input pencarian menggunakan method GET (`?q=keyword`)
+
+### Kode (Controller):
+
+```php
+$q = $this->request->getVar('q') ?? '';
+
+$data = [
+    'q'       => $q,
+    'artikel' => $model->like('judul', $q)->paginate(5),
+    'pager'   => $model->pager,
+];
+```
+
+---
+
+### Form Pencarian di View:
+
+```php
+<form method="get">
+    <input type="text" name="q" value="<?= $q; ?>" placeholder="Cari artikel...">
+    <button type="submit">Cari</button>
+</form>
+```
+
+---
+
+## Integrasi Search + Pagination
+
+Agar pencarian tetap aktif saat berpindah halaman, digunakan:
+
+```php
+<?= $pager->only(['q'])->links(); ?>
+```
+
+### Fungsi:
+
+* Menjaga parameter pencarian (`q`) tetap ada saat pagination
+* Mencegah hasil pencarian hilang saat pindah halaman
+
+---
+
+Dengan fitur ini, admin dapat:
+
+* Melihat data artikel secara bertahap (pagination)
+* Mencari artikel dengan cepat berdasarkan judul
+* Menggunakan pencarian tanpa kehilangan data saat berpindah halaman
+
+---
+
+<img width="1919" height="1083" alt="image" src="https://github.com/user-attachments/assets/8e557618-4f89-4d2a-b1df-fe189dade031" />
