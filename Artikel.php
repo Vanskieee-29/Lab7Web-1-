@@ -3,16 +3,21 @@
 namespace App\Controllers;
 
 use App\Models\ArtikelModel;
+use App\Models\KategoriModel;
 
 class Artikel extends BaseController
 {
     public function index()
-    {
-        $title = 'Daftar Artikel';
-        $model = new ArtikelModel();
-        $artikel = $model->findAll();
-        return view('artikel/index', compact('artikel', 'title'));
-    }
+{
+    $model = new ArtikelModel();
+
+    $data = [
+        'title' => 'Daftar Artikel',
+        'artikel' => $model->getArtikelDenganKategori()
+    ];
+
+    return view('artikel/index', $data);
+}
 
     public function view($slug)
     {
@@ -33,16 +38,31 @@ class Artikel extends BaseController
 
     public function admin_index()
     {
-        $title = 'Daftar Artikel';
-        $q = $this->request->getVar('q') ?? '';
-
         $model = new ArtikelModel();
+        $kategoriModel = new KategoriModel();
+
+        $q = $this->request->getVar('q') ?? '';
+        $kategori_id = $this->request->getVar('kategori_id') ?? '';
+
+        $builder = $model->table('artikel')
+            ->select('artikel.*, kategori.nama_kategori')
+            ->join('kategori', 'kategori.id_kategori = artikel.id_kategori');
+
+        if ($q != '') {
+            $builder->like('artikel.judul', $q);
+        }
+
+        if ($kategori_id != '') {
+            $builder->where('artikel.id_kategori', $kategori_id);
+        }
 
         $data = [
-            'title' => $title,
-            'q' => $q, // 🔥 INI WAJIB ADA
-            'artikel' => $model->like('judul', $q)->paginate(5),
+            'title' => 'Daftar Artikel',
+            'q' => $q,
+            'kategori_id' => $kategori_id,
+            'artikel' => $builder->paginate(5),
             'pager' => $model->pager,
+            'kategori' => $kategoriModel->findAll(),
         ];
 
         return view('artikel/admin_index', $data);
@@ -50,47 +70,73 @@ class Artikel extends BaseController
 
     public function add()
     {
-        // validasi data.
+        $model = new ArtikelModel();
+        $kategoriModel = new \App\Models\KategoriModel();
+
+        // validasi
         $validation = \Config\Services::validation();
-        $validation->setRules(['judul' => 'required']);
+        $validation->setRules([
+            'judul' => 'required',
+            'id_kategori' => 'required|integer'
+        ]);
+
         $isDataValid = $validation->withRequest($this->request)->run();
-        
+
         if ($isDataValid)
         {
-            $artikel = new ArtikelModel();
-            $artikel->insert([
+            $model->insert([
                 'judul' => $this->request->getPost('judul'),
                 'isi' => $this->request->getPost('isi'),
                 'slug' => url_title($this->request->getPost('judul')),
+                'id_kategori' => $this->request->getPost('id_kategori'), // 🔥 penting
             ]);
-            return redirect('admin/artikel');
+
+            return redirect()->to(base_url('admin/artikel'));
         }
-        $title = "Tambah Artikel";
-        return view('artikel/form_add', compact('title'));
+
+        $data = [
+            'title' => 'Tambah Artikel',
+            'kategori' => $kategoriModel->findAll(), // 🔥 ini biar dropdown muncul
+        ];
+
+        return view('artikel/form_add', $data);
     }
 
     public function edit($id)
     {
-        $artikel = new ArtikelModel();
-    
-         // validasi data.
+        $model = new ArtikelModel();
+        $kategoriModel = new \App\Models\KategoriModel();
+
+        // validasi data
         $validation = \Config\Services::validation();
-        $validation->setRules(['judul' => 'required']);
+        $validation->setRules([
+            'judul' => 'required',
+            'id_kategori' => 'required|integer' // 🔥 tambahan
+        ]);
+
         $isDataValid = $validation->withRequest($this->request)->run();
-        
+
         if ($isDataValid)
         {
-            $artikel->update($id, [
+            $model->update($id, [
                 'judul' => $this->request->getPost('judul'),
                 'isi' => $this->request->getPost('isi'),
+                'id_kategori' => $this->request->getPost('id_kategori'), // 🔥 tambahan
             ]);
-            return redirect('admin/artikel');
+
+            return redirect()->to(base_url('admin/artikel'));
         }
 
         // ambil data lama
-        $data = $artikel->where('id', $id)->first();
-        $title = "Edit Artikel";
-        return view('artikel/form_edit', compact('title', 'data'));
+        $data = $model->where('id', $id)->first();
+
+        $result = [
+            'title' => 'Edit Artikel',
+            'data' => $data,
+            'kategori' => $kategoriModel->findAll(), // 🔥 WAJIB buat dropdown
+        ];
+
+        return view('artikel/form_edit', $result);
     }
 
     public function delete($id)
