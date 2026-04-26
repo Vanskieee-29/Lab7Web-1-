@@ -927,3 +927,142 @@ Dengan fitur ini:
 <img width="1919" height="1082" alt="Screenshot 2026-04-26 155238" src="https://github.com/user-attachments/assets/2e45938a-2adc-4a03-8079-4dbbc7dbb5c0" />
 <img width="1919" height="1086" alt="Screenshot 2026-04-26 155307" src="https://github.com/user-attachments/assets/e3101c40-e99b-4dcb-a1db-cc5ad5ef2b16" />
 <img width="1919" height="1086" alt="Screenshot 2026-04-26 155321" src="https://github.com/user-attachments/assets/8484a78e-c119-43c3-8530-5cf8f45658b4" />
+
+---
+
+## Update Fitur – Manajemen Kategori & Upload Gambar
+
+Pada tahap ini, sistem Portal Berita telah dikembangkan dengan penambahan fitur kategori artikel dan upload gambar, serta perbaikan beberapa bug penting.
+
+---
+
+### Fitur yang Ditambahkan
+
+#### 1. Kategori Artikel
+
+* Setiap artikel kini memiliki relasi dengan tabel `kategori`
+* Data kategori ditampilkan di:
+
+  * Halaman admin (dashboard artikel)
+  * Halaman user (opsional)
+* Tersedia dropdown kategori pada:
+
+  * Form tambah artikel
+  * Form edit artikel
+
+---
+
+#### 2. Upload Gambar
+
+* Admin dapat mengupload gambar saat menambahkan artikel
+* File gambar disimpan di folder:
+
+  ```bash
+  public/gambar/
+  ```
+* Nama file disimpan ke database pada kolom `gambar`
+
+---
+
+#### 3. Filter & Pencarian
+
+* Admin dapat:
+
+  * Mencari artikel berdasarkan judul
+  * Filter artikel berdasarkan kategori
+* Menggunakan query builder dengan kondisi dinamis
+
+---
+
+#### 4. Pagination
+
+* Data artikel pada dashboard ditampilkan dengan pagination
+* Memudahkan navigasi data dalam jumlah banyak
+
+---
+
+### Bug yang Diperbaiki
+
+#### 1. Error Upload Gambar (mkdir error)
+
+* Penyebab: folder `gambar` belum tersedia
+* Solusi: membuat folder manual di `public/gambar`
+
+---
+
+#### 2. Artikel Tidak Muncul di Dashboard
+
+* Penyebab: menggunakan `INNER JOIN`
+* Solusi: diganti menjadi `LEFT JOIN`
+
+```php
+->join('kategori', 'kategori.id_kategori = artikel.id_kategori', 'left')
+```
+
+---
+
+#### 3. Kategori Tidak Tersimpan
+
+* Penyebab: field `id_kategori` tidak ada di `$allowedFields`
+* Solusi:
+
+```php
+protected $allowedFields = [
+    'judul',
+    'isi',
+    'status',
+    'slug',
+    'gambar',
+    'id_kategori'
+];
+```
+
+---
+
+### Insight yang Didapat
+
+* `allowedFields` sangat berpengaruh dalam proses insert & update di CodeIgniter 4
+* Relasi tabel membutuhkan JOIN yang tepat (`LEFT JOIN` vs `INNER JOIN`)
+* Upload file membutuhkan path yang valid dan folder yang sudah tersedia
+* Debugging efektif dilakukan dengan:
+
+  * Cek database
+  * Cek request input
+  * Cek model & controller
+
+---
+
+### Status Saat Ini
+
+✔ CRUD Artikel
+✔ Upload Gambar
+✔ Relasi Kategori
+✔ Filter & Search
+✔ Pagination
+✔ Authentication (Login Admin)
+
+---
+
+### Struktur Tambahan
+
+```bash
+app/
+ ├── Models/
+ │    ├── ArtikelModel.php
+ │    └── KategoriModel.php
+ ├── Controllers/
+ │    └── Artikel.php
+ ├── Views/
+ │    └── artikel/
+ │         ├── admin_index.php
+ │         ├── form_add.php
+ │         └── form_edit.php
+
+public/
+ └── gambar/
+```
+
+<img width="1918" height="1044" alt="Screenshot 2026-04-26 210943" src="https://github.com/user-attachments/assets/8250a8be-c6cf-42bb-9d86-28d99eaf0097" />
+<img width="1919" height="1029" alt="Screenshot 2026-04-26 210957" src="https://github.com/user-attachments/assets/88f91765-5f98-44ac-84d8-3d3a4f68500e" />
+
+---
