@@ -777,3 +777,153 @@ Dengan fitur ini, admin dapat:
 ---
 
 <img width="1919" height="1083" alt="image" src="https://github.com/user-attachments/assets/8e557618-4f89-4d2a-b1df-fe189dade031" />
+
+---
+
+# Fitur Kategori & Relasi Database (Praktikum 6)
+
+Pada tahap ini, sistem dikembangkan dengan menambahkan fitur **kategori artikel** menggunakan konsep **relasi database (One-to-Many)** serta implementasi **JOIN Query Builder** di CodeIgniter.
+
+---
+
+## Struktur Database
+
+### Tabel `kategori`
+
+Digunakan untuk menyimpan data kategori artikel.
+
+| Field         | Tipe              |
+| ------------- | ----------------- |
+| id_kategori   | INT (Primary Key) |
+| nama_kategori | VARCHAR           |
+| slug_kategori | VARCHAR           |
+
+### Relasi ke Tabel `artikel`
+
+Setiap artikel memiliki satu kategori.
+
+```sql
+ALTER TABLE artikel
+ADD COLUMN id_kategori INT,
+ADD CONSTRAINT fk_kategori_artikel
+FOREIGN KEY (id_kategori) REFERENCES kategori(id_kategori);
+```
+
+---
+
+## Model
+
+### KategoriModel
+
+```php
+class KategoriModel extends Model
+{
+    protected $table = 'kategori';
+    protected $primaryKey = 'id_kategori';
+    protected $allowedFields = ['nama_kategori', 'slug_kategori'];
+}
+```
+
+---
+
+## JOIN Query (Artikel + Kategori)
+
+Menggunakan Query Builder untuk menggabungkan data artikel dan kategori:
+
+```php
+$builder = $model->table('artikel')
+    ->select('artikel.*, kategori.nama_kategori')
+    ->join('kategori', 'kategori.id_kategori = artikel.id_kategori');
+```
+
+---
+
+## Filter Berdasarkan Kategori
+
+Admin dapat memfilter artikel berdasarkan kategori:
+
+```php
+if ($kategori_id != '') {
+    $builder->where('artikel.id_kategori', $kategori_id);
+}
+```
+
+---
+
+## Integrasi Search + Pagination
+
+Fitur pencarian dan pagination tetap berjalan bersamaan dengan filter kategori:
+
+```php
+<?= $pager->only(['q', 'kategori_id'])->links(); ?>
+```
+
+---
+
+## Tampilan (View)
+
+### Dropdown Kategori (Tambah & Edit Artikel)
+
+```php
+<select name="id_kategori">
+    <?php foreach ($kategori as $k): ?>
+        <option value="<?= $k['id_kategori']; ?>">
+            <?= $k['nama_kategori']; ?>
+        </option>
+    <?php endforeach; ?>
+</select>
+```
+
+---
+
+### Filter Kategori di Admin
+
+```php
+<select name="kategori_id">
+    <option value="">Semua Kategori</option>
+    <?php foreach ($kategori as $k): ?>
+        <option value="<?= $k['id_kategori']; ?>">
+            <?= $k['nama_kategori']; ?>
+        </option>
+    <?php endforeach; ?>
+</select>
+```
+
+---
+
+### Menampilkan Kategori di Tabel
+
+```php
+<td><?= $row['nama_kategori']; ?></td>
+```
+
+---
+
+## Data Dummy
+
+Contoh data kategori:
+
+```sql
+INSERT INTO kategori (nama_kategori, slug_kategori) VALUES
+('Teknologi', 'teknologi'),
+('Pendidikan', 'pendidikan'),
+('Olahraga', 'olahraga'),
+('Kesehatan', 'kesehatan'),
+('Bisnis', 'bisnis');
+```
+
+---
+
+Dengan fitur ini:
+
+* Artikel memiliki kategori
+* Data artikel dan kategori dapat ditampilkan bersamaan
+* Admin dapat memfilter artikel berdasarkan kategori
+* Sistem menjadi lebih terstruktur dan mendekati aplikasi web nyata
+
+---
+
+<img width="1919" height="1086" alt="Screenshot 2026-04-26 155223" src="https://github.com/user-attachments/assets/aa15dc3c-a08c-4535-b08b-ed5fc4ed87f6" />
+<img width="1919" height="1082" alt="Screenshot 2026-04-26 155238" src="https://github.com/user-attachments/assets/2e45938a-2adc-4a03-8079-4dbbc7dbb5c0" />
+<img width="1919" height="1086" alt="Screenshot 2026-04-26 155307" src="https://github.com/user-attachments/assets/e3101c40-e99b-4dcb-a1db-cc5ad5ef2b16" />
+<img width="1919" height="1086" alt="Screenshot 2026-04-26 155321" src="https://github.com/user-attachments/assets/8484a78e-c119-43c3-8530-5cf8f45658b4" />
