@@ -1067,3 +1067,108 @@ public/
 <img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/9fbed778-ac29-4b01-ac30-b70f9a350398" />
 
 ---
+
+# Praktikum 8 - Pagination dan Pencarian Artikel
+
+## Fitur yang Ditambahkan
+
+* Pagination data artikel menggunakan Pager CodeIgniter 4.
+* Pencarian artikel berdasarkan judul.
+* Filter artikel berdasarkan kategori.
+* Integrasi pagination dengan fitur pencarian dan filter kategori.
+
+## Implementasi
+
+Pada praktikum ini dilakukan pengembangan halaman administrasi artikel dengan menambahkan fitur pencarian dan pagination. Data artikel ditampilkan menggunakan metode `paginate()` dari CodeIgniter 4 sehingga data dapat dibagi menjadi beberapa halaman.
+
+Selain itu ditambahkan fitur pencarian berdasarkan judul artikel menggunakan query parameter `q`, serta filter kategori menggunakan `kategori_id`.
+
+## Hasil
+
+* Artikel dapat dicari berdasarkan kata kunci.
+* Artikel dapat difilter berdasarkan kategori.
+* Data artikel ditampilkan secara bertahap menggunakan pagination.
+
+---
+
+# Praktikum 9 - AJAX CRUD Artikel
+
+## Fitur yang Ditambahkan
+
+* Menampilkan data artikel menggunakan AJAX.
+* Menambahkan artikel tanpa reload halaman.
+* Mengubah artikel menggunakan AJAX.
+* Menghapus artikel menggunakan AJAX.
+* Loading indicator saat proses pengambilan data.
+
+## Implementasi
+
+Praktikum ini menggunakan jQuery AJAX untuk berkomunikasi dengan server tanpa melakukan refresh halaman.
+
+Endpoint AJAX dibuat pada controller khusus yang menangani:
+
+* Menampilkan data artikel dalam format JSON.
+* Menambah data artikel.
+* Mengubah data artikel.
+* Menghapus data artikel.
+
+Data yang diterima kemudian ditampilkan secara dinamis pada tabel HTML menggunakan JavaScript.
+
+## Hasil
+
+* Operasi Create, Read, Update, Delete dapat dilakukan tanpa reload halaman.
+* Pengalaman pengguna menjadi lebih interaktif.
+* Waktu respon aplikasi lebih cepat dibanding metode konvensional.
+
+<img width="1919" height="1081" alt="ajax" src="https://github.com/user-attachments/assets/0ac9a58e-d5a3-4f99-8f5c-44cd7ff96140" />
+<img width="1920" height="1200" alt="ajax edit notif" src="https://github.com/user-attachments/assets/eab93a90-ce10-4cd5-a162-739d0d237d50" />
+<img width="1919" height="1079" alt="ajax edit" src="https://github.com/user-attachments/assets/6a1a54e0-4204-491a-9316-93d0557972c2" />
+<img width="1918" height="1036" alt="ajax tambah" src="https://github.com/user-attachments/assets/4a97ebe6-ce45-4bd6-83e7-f954fa92b29b" />
+<img width="1919" height="1039" alt="sorting dan loading" src="https://github.com/user-attachments/assets/5ec28a6a-2f9b-4415-af3d-14c122584b0c" />
+
+---
+
+# Praktikum 10 - REST API CodeIgniter 4
+
+## Fitur yang Ditambahkan
+
+* REST API menggunakan ResourceController.
+* Endpoint GET seluruh artikel.
+* Endpoint GET artikel berdasarkan ID.
+* Endpoint POST untuk menambah artikel.
+* Pengujian API menggunakan Postman.
+
+## Endpoint API
+
+### GET Semua Artikel
+
+GET /post
+
+### GET Artikel Berdasarkan ID
+
+GET /post/{id}
+
+### POST Tambah Artikel
+
+POST /post
+
+Body (x-www-form-urlencoded):
+
+judul = Artikel API
+
+isi = Belajar REST API
+
+## Implementasi
+
+REST API dibangun menggunakan ResourceController pada CodeIgniter 4. Data artikel dikembalikan dalam format JSON sehingga dapat digunakan oleh aplikasi lain seperti web frontend, mobile app, maupun layanan pihak ketiga.
+
+Pengujian endpoint dilakukan menggunakan aplikasi Postman untuk memastikan setiap request dapat diproses dengan benar.
+
+## Hasil
+
+* API berhasil mengembalikan data artikel dalam format JSON.
+* Data baru dapat ditambahkan melalui endpoint POST.
+* Pengujian menggunakan Postman berhasil dilakukan dengan status response 200 OK dan 201 Created.
+
+<img width="1920" height="1200" alt="Screenshot 2026-06-15 130504" src="https://github.com/user-attachments/assets/925940ce-271b-417d-a441-cfa1c6f14adc" />
+<img width="1919" height="1138" alt="Screenshot 2026-06-15 140707" src="https://github.com/user-attachments/assets/f1e89673-3250-4054-8513-3049e9f29543" />
