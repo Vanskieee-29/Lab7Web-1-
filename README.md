@@ -1419,18 +1419,6 @@ Pada praktikum ini berhasil dibuat aplikasi frontend berbasis VueJS yang berkomu
 
 ---
 
-### Screenshot yang Disarankan untuk README
-
-1. Tampilan daftar artikel VueJS.
-2. Form tambah artikel.
-3. Form edit artikel.
-4. Hasil GET di Postman.
-5. Hasil POST di Postman.
-6. Hasil PUT di Postman.
-7. Hasil DELETE di Postman.
-
-Kalau format README GitHub kamu dari praktikum 8–10 sudah ada pola tertentu (misalnya ada bagian *Langkah Praktikum*, *Flowchart*, *Output*, dll.), kirim README sebelumnya dan aku sesuaikan supaya konsisten dengan praktikum-praktikum yang sudah ada.
-
 <img width="1920" height="1200" alt="Screenshot 2026-06-15 130504" src="https://github.com/user-attachments/assets/c2e22748-3e01-4df3-be01-ec0b7018ddc3" />
 <img width="1919" height="1138" alt="Screenshot 2026-06-15 140707" src="https://github.com/user-attachments/assets/9a4c7319-156b-480a-81b3-bebfba77c819" />
 <img width="1919" height="1199" alt="Screenshot 2026-06-15 143042" src="https://github.com/user-attachments/assets/f28a43c3-83ba-4397-8edf-769198008dec" />
