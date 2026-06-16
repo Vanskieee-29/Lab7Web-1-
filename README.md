@@ -1172,3 +1172,266 @@ Pengujian endpoint dilakukan menggunakan aplikasi Postman untuk memastikan setia
 
 <img width="1920" height="1200" alt="Screenshot 2026-06-15 130504" src="https://github.com/user-attachments/assets/925940ce-271b-417d-a441-cfa1c6f14adc" />
 <img width="1919" height="1138" alt="Screenshot 2026-06-15 140707" src="https://github.com/user-attachments/assets/f1e89673-3250-4054-8513-3049e9f29543" />
+
+Karena praktikum yang baru kita selesaikan adalah **VueJS + Axios + REST API CodeIgniter 4**, maka README-nya bisa langsung melanjutkan setelah praktikum sebelumnya.
+
+---
+
+# Praktikum 11 - Frontend VueJS dengan REST API CodeIgniter 4
+
+## Tujuan Praktikum
+
+* Memahami konsep Single Page Application (SPA) sederhana menggunakan VueJS.
+* Menghubungkan frontend VueJS dengan REST API CodeIgniter 4.
+* Mengimplementasikan operasi CRUD menggunakan Axios.
+* Memahami komunikasi data menggunakan HTTP Method GET, POST, PUT, dan DELETE.
+
+## Tools yang Digunakan
+
+* CodeIgniter 4
+* VueJS 3
+* Axios
+* REST API
+* XAMPP
+* Visual Studio Code
+
+---
+
+## Struktur Proyek
+
+### Backend (CodeIgniter 4)
+
+Controller REST API:
+
+```text
+app/
+└── Controllers/
+    └── Post.php
+```
+
+Model:
+
+```text
+app/
+└── Models/
+    └── ArtikelModel.php
+```
+
+Routes:
+
+```php
+$routes->resource('post');
+```
+
+---
+
+### Frontend VueJS
+
+```text
+vuejs/
+├── index.html
+├── assets/
+│   ├── css/
+│   │   └── style.css
+│   └── js/
+│       └── app.js
+```
+
+---
+
+## Implementasi CRUD
+
+### Read Data (GET)
+
+Menampilkan seluruh data artikel dari REST API.
+
+```javascript
+axios.get(apiUrl + '/post')
+```
+
+Endpoint:
+
+```http
+GET /post
+```
+
+---
+
+### Tambah Data (POST)
+
+Menambahkan artikel baru ke database.
+
+```javascript
+axios.post(
+    apiUrl + '/post',
+    this.formData
+)
+```
+
+Endpoint:
+
+```http
+POST /post
+```
+
+---
+
+### Edit Data (PUT)
+
+Mengubah data artikel berdasarkan ID.
+
+```javascript
+axios.put(
+    apiUrl + '/post/' + this.formData.id,
+    this.formData
+)
+```
+
+Endpoint:
+
+```http
+PUT /post/{id}
+```
+
+---
+
+### Hapus Data (DELETE)
+
+Menghapus artikel berdasarkan ID.
+
+```javascript
+axios.delete(
+    apiUrl + '/post/' + id
+)
+```
+
+Endpoint:
+
+```http
+DELETE /post/{id}
+```
+
+---
+
+## Fitur yang Berhasil Diimplementasikan
+
+### Backend
+
+* REST API menggunakan ResourceController.
+* Endpoint GET, POST, PUT, dan DELETE.
+* Menggunakan ArtikelModel untuk akses database.
+* Menghasilkan response JSON.
+
+### Frontend
+
+* Menampilkan data artikel secara otomatis.
+* Menambah data artikel.
+* Mengubah data artikel.
+* Menghapus data artikel.
+* Modal form tambah dan edit.
+* Refresh data otomatis setelah proses CRUD berhasil.
+
+---
+
+## Pengujian API Menggunakan Postman
+
+### GET Data
+
+```http
+GET http://127.0.0.1/lab11_ci/ci4/public/post
+```
+
+Hasil:
+
+```json
+{
+  "artikel": [...]
+}
+```
+
+---
+
+### POST Data
+
+```http
+POST http://127.0.0.1/lab11_ci/ci4/public/post
+```
+
+Body:
+
+```text
+judul=Artikel API
+isi=Belajar REST API
+```
+
+Response:
+
+```json
+{
+  "status": 201,
+  "message": "Data artikel berhasil ditambahkan"
+}
+```
+
+---
+
+### PUT Data
+
+```http
+PUT http://127.0.0.1/lab11_ci/ci4/public/post/15
+```
+
+Response:
+
+```json
+{
+  "status": 200,
+  "message": "Data artikel berhasil diubah"
+}
+```
+
+---
+
+### DELETE Data
+
+```http
+DELETE http://127.0.0.1/lab11_ci/ci4/public/post/15
+```
+
+Response:
+
+```json
+{
+  "status": 200,
+  "message": "Data artikel berhasil dihapus"
+}
+```
+
+---
+
+## Hasil Praktikum
+
+Frontend VueJS berhasil terhubung dengan REST API CodeIgniter 4 menggunakan Axios. Seluruh operasi CRUD dapat dijalankan dengan baik tanpa reload halaman sehingga menghasilkan aplikasi web yang lebih interaktif dan responsif.
+
+## Kesimpulan
+
+Pada praktikum ini berhasil dibuat aplikasi frontend berbasis VueJS yang berkomunikasi dengan REST API CodeIgniter 4 menggunakan Axios. Implementasi CRUD berhasil dilakukan menggunakan HTTP Method GET, POST, PUT, dan DELETE sehingga frontend dapat mengelola data artikel secara dinamis dan realtime.
+
+---
+
+### Screenshot yang Disarankan untuk README
+
+1. Tampilan daftar artikel VueJS.
+2. Form tambah artikel.
+3. Form edit artikel.
+4. Hasil GET di Postman.
+5. Hasil POST di Postman.
+6. Hasil PUT di Postman.
+7. Hasil DELETE di Postman.
+
+Kalau format README GitHub kamu dari praktikum 8–10 sudah ada pola tertentu (misalnya ada bagian *Langkah Praktikum*, *Flowchart*, *Output*, dll.), kirim README sebelumnya dan aku sesuaikan supaya konsisten dengan praktikum-praktikum yang sudah ada.
+
+<img width="1920" height="1200" alt="Screenshot 2026-06-15 130504" src="https://github.com/user-attachments/assets/c2e22748-3e01-4df3-be01-ec0b7018ddc3" />
+<img width="1919" height="1138" alt="Screenshot 2026-06-15 140707" src="https://github.com/user-attachments/assets/9a4c7319-156b-480a-81b3-bebfba77c819" />
+<img width="1919" height="1199" alt="Screenshot 2026-06-15 143042" src="https://github.com/user-attachments/assets/f28a43c3-83ba-4397-8edf-769198008dec" />
+<img width="1920" height="1200" alt="Screenshot 2026-06-15 152049" src="https://github.com/user-attachments/assets/d725f50a-ab69-470e-a2f2-6859917c46b9" />
