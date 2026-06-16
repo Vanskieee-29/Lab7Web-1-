@@ -1621,3 +1621,242 @@ Pada praktikum ini berhasil diimplementasikan Vue Router pada aplikasi VueJS seh
 <img width="1919" height="1085" alt="Screenshot 2026-06-16 234048" src="https://github.com/user-attachments/assets/e110cb07-b004-499d-a0ac-ab2363b1203e" />
 
 ---
+
+# Praktikum 13 - Vue Router dan Authentication
+
+## Tujuan Praktikum
+
+Pada praktikum ini dilakukan implementasi Single Page Application (SPA) menggunakan Vue Router. Selain itu ditambahkan sistem autentikasi sederhana menggunakan Local Storage dan Route Guard untuk membatasi akses halaman tertentu.
+
+---
+
+## Hasil Praktikum
+
+### 1. Implementasi Vue Router
+
+Vue Router digunakan untuk mengelola navigasi antar halaman tanpa melakukan reload halaman.
+
+File `app.js`
+
+```javascript
+const routes = [
+    {
+        path: '/',
+        component: Home
+    },
+    {
+        path: '/artikel',
+        component: Artikel
+    },
+    {
+        path: '/about',
+        component: About
+    }
+]
+
+const router = VueRouter.createRouter({
+    history: VueRouter.createWebHashHistory(),
+    routes
+})
+```
+
+---
+
+### 2. Pembuatan Komponen Halaman
+
+Aplikasi terdiri dari beberapa komponen:
+
+* Home
+* Artikel
+* About
+* Login
+
+Struktur folder:
+
+```text
+assets/
+└── js/
+    └── components/
+        ├── Home.js
+        ├── Artikel.js
+        ├── About.js
+        └── Login.js
+```
+
+---
+
+### 3. Implementasi Halaman About
+
+Halaman About digunakan untuk menampilkan profil mahasiswa.
+
+Contoh informasi yang ditampilkan:
+
+* Nama
+* NIM
+* Kelas
+* Program Studi
+* Foto Profil
+
+Tampilan dibuat menggunakan Flexbox sehingga informasi dan foto dapat tampil sejajar.
+
+---
+
+### 4. Implementasi Login
+
+Halaman Login dibuat menggunakan Vue Component.
+
+```javascript
+data() {
+    return {
+        username: '',
+        password: '',
+        errorMessage: ''
+    }
+}
+```
+
+Data login dikirim menggunakan Axios.
+
+```javascript
+axios.post(
+    apiUrl + '/user/login',
+    {
+        username: this.username,
+        password: this.password
+    }
+)
+```
+
+---
+
+### 5. Menyimpan Status Login
+
+Status login disimpan menggunakan Local Storage.
+
+```javascript
+localStorage.setItem(
+    'token',
+    'login-success'
+)
+```
+
+Data ini digunakan untuk menentukan apakah pengguna telah login atau belum.
+
+---
+
+### 6. Route Guard
+
+Route Guard digunakan untuk melindungi halaman tertentu agar hanya dapat diakses oleh pengguna yang telah login.
+
+```javascript
+router.beforeEach((to, from, next) => {
+
+    const token =
+        localStorage.getItem('token');
+
+    if (
+        to.path === '/artikel'
+        && !token
+    ) {
+        next('/login');
+    }
+    else {
+        next();
+    }
+
+});
+```
+
+---
+
+### 7. Logout
+
+Logout dilakukan dengan menghapus token dari Local Storage.
+
+```javascript
+logout() {
+
+    localStorage.removeItem('token');
+
+    router.push('/login');
+
+}
+```
+
+---
+
+## Pengujian
+
+### Skenario A - Login
+
+**Langkah Pengujian**
+
+1. Membuka halaman Login.
+2. Memasukkan username dan password.
+3. Menekan tombol Login.
+
+**Hasil**
+
+* Login berhasil.
+* Token tersimpan pada Local Storage.
+* Pengguna diarahkan ke halaman Artikel.
+
+**Status**
+
+✅ Berhasil
+
+---
+
+### Skenario B - Proteksi Halaman
+
+**Langkah Pengujian**
+
+1. Logout dari aplikasi.
+2. Mengakses URL:
+
+```text
+#/artikel
+```
+
+**Hasil**
+
+* Sistem mendeteksi token tidak tersedia.
+* Route Guard aktif.
+* Pengguna otomatis diarahkan ke halaman Login.
+
+**Status**
+
+✅ Berhasil
+
+---
+
+## Dokumentasi Tampilan
+
+### Home
+
+* Menampilkan halaman utama aplikasi.
+* <img width="1919" height="1085" alt="Screenshot 2026-06-17 005413" src="https://github.com/user-attachments/assets/9bc9a972-ca00-49eb-ab48-dde6f9f52825" />
+
+### Artikel
+
+* Menampilkan daftar artikel.
+* Mendukung tambah, ubah, dan hapus data melalui REST API.
+* <img width="1919" height="1077" alt="Screenshot 2026-06-17 005446" src="https://github.com/user-attachments/assets/577481fc-3027-4ecc-ad3b-73b5bf5f9279" />
+
+### About
+
+* Menampilkan profil mahasiswa beserta foto.
+* <img width="1913" height="1076" alt="Screenshot 2026-06-17 005453" src="https://github.com/user-attachments/assets/cfc57d60-1dc1-455e-a88c-b353877a6288" />
+
+
+### Login
+
+* Menampilkan form autentikasi pengguna.
+* <img width="1919" height="1079" alt="Screenshot 2026-06-17 005427" src="https://github.com/user-attachments/assets/7b115b59-4f04-4f42-9bd4-c628ca48d133" />
+
+
+---
+
+## Kesimpulan
+
+Pada praktikum ini berhasil diimplementasikan Vue Router untuk membangun Single Page Application (SPA), autentikasi sederhana menggunakan Local Storage, serta Route Guard untuk membatasi akses halaman tertentu. Pengguna yang belum login tidak dapat mengakses halaman yang diproteksi dan akan otomatis diarahkan ke halaman Login. Seluruh skenario pengujian berhasil dijalankan sesuai tujuan praktikum.
