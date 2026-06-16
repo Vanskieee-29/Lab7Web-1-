@@ -1423,3 +1423,201 @@ Pada praktikum ini berhasil dibuat aplikasi frontend berbasis VueJS yang berkomu
 <img width="1919" height="1138" alt="Screenshot 2026-06-15 140707" src="https://github.com/user-attachments/assets/9a4c7319-156b-480a-81b3-bebfba77c819" />
 <img width="1919" height="1199" alt="Screenshot 2026-06-15 143042" src="https://github.com/user-attachments/assets/f28a43c3-83ba-4397-8edf-769198008dec" />
 <img width="1920" height="1200" alt="Screenshot 2026-06-15 152049" src="https://github.com/user-attachments/assets/d725f50a-ab69-470e-a2f2-6859917c46b9" />
+
+---
+
+# Praktikum 12 - Vue Router pada Aplikasi VueJS
+
+Pada praktikum ini dilakukan implementasi **Vue Router** pada aplikasi frontend VueJS yang sebelumnya telah dibuat. Vue Router digunakan untuk mengatur navigasi antar halaman pada aplikasi Single Page Application (SPA) tanpa melakukan reload halaman.
+
+Aplikasi dibagi menjadi beberapa halaman, yaitu:
+
+* Home
+* Artikel
+* About
+
+Selain itu, halaman Artikel tetap terhubung dengan REST API CodeIgniter 4 yang telah dibuat pada praktikum sebelumnya sehingga fitur CRUD artikel tetap dapat digunakan.
+
+---
+
+## Tujuan Praktikum
+
+* Memahami konsep Single Page Application (SPA).
+* Mengimplementasikan Vue Router pada aplikasi VueJS.
+* Membuat navigasi antar halaman menggunakan router.
+* Menghubungkan halaman Artikel dengan REST API CodeIgniter 4.
+* Menampilkan profil mahasiswa pada halaman About.
+
+---
+
+## Teknologi yang Digunakan
+
+* HTML5
+* CSS3
+* JavaScript
+* VueJS 3
+* Vue Router 4
+* Axios
+* CodeIgniter 4 REST API
+* MySQL
+
+---
+
+## Struktur Folder
+
+```text
+lab11_vuejs/
+│
+├── assets/
+│   ├── css/
+│   │   └── style.css
+│   │
+│   ├── img/
+│   │   └── Davan.jpg
+│   │
+│   └── js/
+│       ├── app.js
+│       │
+│       └── components/
+│           ├── Home.js
+│           ├── Artikel.js
+│           └── About.js
+│
+└── index.html
+```
+
+---
+
+## Implementasi Vue Router
+
+### Konfigurasi Route
+
+```javascript
+const routes = [
+    {
+        path: '/',
+        component: Home
+    },
+    {
+        path: '/artikel',
+        component: Artikel
+    },
+    {
+        path: '/about',
+        component: About
+    }
+]
+```
+
+### Konfigurasi Router
+
+```javascript
+const router = VueRouter.createRouter({
+    history: VueRouter.createWebHashHistory(),
+    routes
+})
+```
+
+---
+
+## Menu Navigasi
+
+Navigasi dibuat menggunakan komponen `router-link`.
+
+```html
+<nav>
+    <router-link to="/">Home</router-link>
+    |
+    <router-link to="/artikel">Artikel</router-link>
+    |
+    <router-link to="/about">About</router-link>
+</nav>
+```
+
+---
+
+## Halaman Home
+
+Halaman Home digunakan sebagai halaman utama aplikasi.
+
+Fitur:
+
+* Menampilkan informasi aplikasi.
+* Menjadi halaman awal saat aplikasi dijalankan.
+
+---
+
+## Halaman Artikel
+
+Halaman Artikel berisi fitur CRUD artikel yang terhubung dengan REST API CodeIgniter 4.
+
+Fitur:
+
+* Menampilkan daftar artikel.
+* Menambah artikel baru.
+* Mengubah data artikel.
+* Menghapus artikel.
+* Mengambil data dari API menggunakan Axios.
+
+Endpoint yang digunakan:
+
+```text
+GET     /post
+POST    /post
+PUT     /post/{id}
+DELETE  /post/{id}
+```
+
+---
+
+## Halaman About
+
+Halaman About digunakan untuk menampilkan profil mahasiswa.
+
+Informasi yang ditampilkan:
+
+* Nama
+* NIM
+* Kelas
+* Program Studi
+* Foto Profil
+
+Contoh implementasi:
+
+```html
+<img src="assets/img/Davan.jpg"
+     class="profile-photo">
+```
+
+---
+
+## Hasil Pengujian
+
+### Home
+
+* Halaman Home berhasil ditampilkan.
+* Navigasi router berjalan dengan baik.
+
+### Artikel
+
+* Data artikel berhasil ditampilkan dari REST API.
+* Fitur tambah data berjalan dengan baik.
+* Fitur edit data berhasil memperbarui data artikel.
+* Fitur hapus data berhasil menghapus artikel dari database.
+
+### About
+
+* Data profil mahasiswa berhasil ditampilkan.
+* Foto profil berhasil dimuat dari folder assets.
+
+---
+
+## Kesimpulan
+
+Pada praktikum ini berhasil diimplementasikan Vue Router pada aplikasi VueJS sehingga aplikasi dapat berpindah halaman tanpa melakukan reload. Halaman Artikel tetap terintegrasi dengan REST API CodeIgniter 4 untuk melakukan operasi CRUD data artikel, sedangkan halaman About digunakan untuk menampilkan profil mahasiswa beserta foto profil. Dengan demikian aplikasi telah menerapkan konsep Single Page Application (SPA) menggunakan VueJS dan Vue Router.
+
+<img width="1919" height="1076" alt="Screenshot 2026-06-16 234019" src="https://github.com/user-attachments/assets/4ab8e101-6bb4-46b5-9678-79e7832929b2" />
+<img width="1919" height="1084" alt="Screenshot 2026-06-16 234035" src="https://github.com/user-attachments/assets/f1821626-3048-427a-984a-25db3e708462" />
+<img width="1919" height="1085" alt="Screenshot 2026-06-16 234048" src="https://github.com/user-attachments/assets/e110cb07-b004-499d-a0ac-ab2363b1203e" />
+
+---
