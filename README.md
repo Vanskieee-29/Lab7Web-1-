@@ -1,4 +1,4 @@
-# Lab7Web (1)
+# Lab11Web CodeIgniter + VueJS
 - Nama: Askaria Davan Dafyanza
 - NIM: 312410298
 - Kelas: I241B
@@ -1860,3 +1860,187 @@ logout() {
 ## Kesimpulan
 
 Pada praktikum ini berhasil diimplementasikan Vue Router untuk membangun Single Page Application (SPA), autentikasi sederhana menggunakan Local Storage, serta Route Guard untuk membatasi akses halaman tertentu. Pengguna yang belum login tidak dapat mengakses halaman yang diproteksi dan akan otomatis diarahkan ke halaman Login. Seluruh skenario pengujian berhasil dijalankan sesuai tujuan praktikum.
+
+---
+
+# Praktikum 14 - Token Based Authentication dan API Security
+
+Pada praktikum ini dilakukan implementasi keamanan API menggunakan Token-Based Authentication pada aplikasi VueJS dan CodeIgniter 4. Sistem keamanan diterapkan agar hanya pengguna yang telah login dan memiliki token yang dapat mengakses endpoint API untuk melakukan operasi CRUD.
+
+---
+
+## Langkah 1 - Membuat Filter API Authentication
+
+Membuat file `ApiAuthFilter.php` pada folder:
+
+```text
+app/Filters/ApiAuthFilter.php
+```
+
+Filter digunakan untuk memeriksa keberadaan token pada request yang masuk ke server.
+
+Jika token tidak ditemukan, server akan mengembalikan response:
+
+```json
+{
+    "status": 401,
+    "error": 401,
+    "messages": "Akses Ditolak. Token tidak ditemukan pada request!"
+}
+```
+
+---
+
+## Langkah 2 - Mendaftarkan Filter
+
+Menambahkan filter pada file:
+
+```text
+app/Config/Filters.php
+```
+
+dengan alias:
+
+```php
+'apiauth' => \App\Filters\ApiAuthFilter::class,
+```
+
+---
+
+## Langkah 3 - Mengamankan Endpoint API
+
+Menerapkan filter pada route REST API sehingga setiap request wajib menyertakan token autentikasi.
+
+```php
+$routes->resource('post', [
+    'filter' => 'apiauth'
+]);
+```
+
+---
+
+## Langkah 4 - Menyimpan Token Login
+
+Setelah proses login berhasil, token disimpan pada browser menggunakan Local Storage.
+
+```javascript
+localStorage.setItem(
+    'token',
+    'login-success'
+);
+```
+
+---
+
+## Langkah 5 - Menambahkan Axios Interceptors
+
+Axios Interceptors digunakan untuk menyisipkan token secara otomatis ke setiap request yang dikirim ke backend.
+
+```javascript
+axios.interceptors.request.use(
+    function(config){
+
+        const token =
+            localStorage.getItem('token');
+
+        if(token)
+        {
+            config.headers.Authorization =
+                'Bearer ' + token;
+        }
+
+        return config;
+    }
+);
+```
+
+---
+
+## Langkah 6 - Pengujian API Tanpa Token
+
+Pengujian dilakukan menggunakan Postman dengan mengakses endpoint:
+
+```text
+http://127.0.0.1/lab11_ci/ci4/public/post
+```
+
+menggunakan metode POST tanpa menambahkan Authorization Header.
+
+Hasil yang diperoleh adalah:
+
+```json
+{
+    "status": 401,
+    "error": 401,
+    "messages": "Akses Ditolak. Token tidak ditemukan pada request!"
+}
+```
+
+### Screenshot Pengujian 401 Unauthorized
+
+*(Tambahkan screenshot Postman di sini)*
+
+---
+
+## Langkah 7 - Pengujian CRUD Setelah Login
+
+Setelah pengguna berhasil login, token tersimpan pada Local Storage dan Axios Interceptors akan mengirimkan token secara otomatis ke backend.
+
+Pengujian berhasil dilakukan untuk:
+
+* Tambah Artikel
+* Edit Artikel
+* Hapus Artikel
+
+tanpa terjadi error autentikasi.
+
+### Screenshot CRUD Setelah Login
+
+*(Tambahkan screenshot aplikasi di sini)*
+
+---
+
+## Langkah 8 - Verifikasi Authorization Header
+
+Melalui Browser Developer Tools pada tab Network dapat dilihat bahwa setiap request API membawa Authorization Header secara otomatis.
+
+Contoh:
+
+```http
+Authorization: Bearer login-success
+```
+
+### Screenshot Network Request
+
+*(Tambahkan screenshot Network yang menampilkan Authorization Header di sini)*
+
+---
+
+## Analisis
+
+### Vue Router Navigation Guards
+
+Navigation Guards bekerja pada sisi client (frontend). Mekanisme ini digunakan untuk membatasi akses pengguna ke halaman tertentu apabila belum login.
+
+Navigation Guards hanya mengontrol perpindahan halaman pada browser dan tidak dapat melindungi API secara langsung.
+
+### CodeIgniter Filters
+
+CodeIgniter Filters bekerja pada sisi server (backend). Filter akan memeriksa setiap request yang masuk ke endpoint API.
+
+Meskipun pengguna mencoba mengakses API menggunakan Postman atau aplikasi lain, filter tetap akan dijalankan sehingga akses tanpa token dapat ditolak.
+
+---
+
+## Kesimpulan
+
+Implementasi Token-Based Authentication berhasil diterapkan pada aplikasi VueJS dan CodeIgniter 4.
+
+Pengujian menunjukkan bahwa request tanpa token ditolak dengan status HTTP 401 Unauthorized, sedangkan request yang berasal dari pengguna yang telah login dapat melakukan operasi CRUD dengan normal karena token dikirim secara otomatis melalui Axios Interceptors.
+
+Vue Router Navigation Guards berfungsi mengamankan akses halaman pada frontend, sedangkan CodeIgniter Filters berfungsi mengamankan endpoint API pada backend. Kombinasi keduanya memberikan lapisan keamanan yang lebih baik terhadap aplikasi.
+
+<img width="1919" height="1079" alt="Screenshot 2026-06-19 010406" src="https://github.com/user-attachments/assets/bdf6803d-4ab8-4698-8551-7518c6fb5302" />
+<img width="1915" height="1082" alt="Screenshot 2026-06-19 012155" src="https://github.com/user-attachments/assets/e314c38b-6311-40e1-acbe-4e16617078b2" />
+
+---
